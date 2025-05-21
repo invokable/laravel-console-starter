@@ -56,159 +56,29 @@ Laravel's notification system allows you to send the results of your command exe
 
 #### Setting Up Notifications
 
-1. Create a notification class:
+Laravel provides a powerful notification system that can be integrated with your console commands to send execution results through various channels. Here's how to set it up:
 
-```shell
-php artisan make:notification CommandExecuted
-```
+1. **Create a notification class**: Use the `make:notification` Artisan command to generate a new notification class. This class will define how your notifications are formatted and sent through different channels.
 
-2. Edit the generated notification class:
+2. **Configure notification channels**: Laravel supports multiple notification channels including:
+   - Email: Send detailed command results via email
+   - Slack: Post command execution status to Slack channels
+   - SMS: Send brief status updates via SMS
+   - Database: Store notifications for display in your application's UI
 
-```php
-<?php
-
-namespace App\Notifications;
-
-use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Notifications\Messages\MailMessage;
-use Illuminate\Notifications\Messages\SlackMessage;
-use Illuminate\Notifications\Notification;
-
-class CommandExecuted extends Notification implements ShouldQueue
-{
-    use Queueable;
-
-    protected $command;
-    protected $output;
-    protected $success;
-
-    public function __construct(string $command, string $output, bool $success = true)
-    {
-        $this->command = $command;
-        $this->output = $output;
-        $this->success = $success;
-    }
-
-    public function via($notifiable)
-    {
-        // Return the channels through which the notification should be sent
-        return ['mail', 'slack']; // Choose channels you need
-    }
-
-    public function toMail($notifiable)
-    {
-        $status = $this->success ? 'succeeded' : 'failed';
-        
-        return (new MailMessage)
-            ->subject("Command {$this->command} {$status}")
-            ->greeting('Command Execution Report')
-            ->line("The command '{$this->command}' has {$status}.")
-            ->line('Output:')
-            ->line($this->output)
-            ->line('Thank you for using our application!');
-    }
-
-    public function toSlack($notifiable)
-    {
-        $status = $this->success ? 'succeeded' : 'failed';
-        
-        return (new SlackMessage)
-            ->success($this->success)
-            ->content("The command '{$this->command}' has {$status}.")
-            ->attachment(function ($attachment) {
-                $attachment->title('Command Output')
-                           ->content($this->output);
-            });
-    }
-}
-```
-
-3. Implement the notification in your command:
-
-```php
-<?php
-
-namespace App\Console\Commands;
-
-use App\Notifications\CommandExecuted;
-use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Notification;
-
-class YourCommand extends Command
-{
-    protected $signature = 'app:your-command';
-    protected $description = 'Your command description';
-
-    public function handle()
-    {
-        // Start output buffering to capture console output
-        ob_start();
-        
-        $success = true;
-        try {
-            // Your command logic here
-            $this->info('Command executed successfully!');
-        } catch (\Exception $e) {
-            $this->error('Command failed: ' . $e->getMessage());
-            $success = false;
-        }
-        
-        // Get the buffered output
-        $output = ob_get_clean();
-        
-        // Send notification with command results
-        Notification::route('mail', config('mail.admin_address'))
-                   ->route('slack', config('services.slack.webhook_url'))
-                   ->notify(new CommandExecuted($this->signature, $output, $success));
-        
-        return $success ? Command::SUCCESS : Command::FAILURE;
-    }
-}
-```
+3. **Implement in your commands**: Add notification logic to your command classes to send results after execution. You can capture command output, execution time, and success/failure status to include in your notifications.
 
 #### Configuration
 
-1. Make sure your mail settings are properly configured in `.env`:
+To use Laravel notifications with your console commands, you'll need to configure the appropriate channels:
 
-```
-MAIL_MAILER=smtp
-MAIL_HOST=your-mail-host
-MAIL_PORT=your-mail-port
-MAIL_USERNAME=your-username
-MAIL_PASSWORD=your-password
-MAIL_ENCRYPTION=tls
-MAIL_FROM_ADDRESS=your-email@example.com
-MAIL_FROM_NAME="${APP_NAME}"
-```
+1. **Email Configuration**: Configure your mail settings in the `.env` file to enable email notifications. Laravel supports various mail drivers including SMTP, Mailgun, Postmark, and Amazon SES.
 
-2. For Slack notifications, install the Slack notification channel:
+2. **Slack Configuration**: For Slack notifications, install the Slack notification channel package and configure your webhook URL in the services configuration file.
 
-```shell
-composer require laravel/slack-notification-channel
-```
-
-3. Configure your Slack webhook URL in `config/services.php`:
-
-```php
-'slack' => [
-    'notifications' => [
-        'webhook_url' => env('SLACK_WEBHOOK_URL'),
-        'channel' => env('SLACK_CHANNEL', null),
-        'username' => env('SLACK_USERNAME', 'Laravel Console'),
-        'icon' => env('SLACK_ICON', null),
-    ],
-],
-```
-
-4. Add your webhook URL to `.env`:
-
-```
-SLACK_WEBHOOK_URL=https://hooks.slack.com/services/your-webhook-url
-SLACK_CHANNEL=#your-channel
-```
+3. **Notification Recipients**: Define who should receive notifications about command execution. You can send notifications to specific email addresses, Slack channels, or phone numbers.
 
 With this configuration, you can easily send notifications about the results of your console commands to stay informed about execution status, especially for scheduled commands running via GitHub Actions.
 
 ## LICENSE
-MIT        
+MIT            
