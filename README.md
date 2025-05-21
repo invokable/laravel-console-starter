@@ -2,6 +2,10 @@
 
 A starter template for Laravel console applications.
 
+## Installation
+```shell
+laravel new my-app --using=revolution/laravel-console-starter
+```
 
 ## Usage
 
