@@ -11,7 +11,7 @@ laravel new my-app --using=revolution/laravel-console-starter
 
 ### Make a new command
 ```shell
-php artisan make:command Test
+php artisan make:command Test --command=app:test
 ```
 
 ### Re-add config file
