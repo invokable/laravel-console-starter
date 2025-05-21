@@ -28,9 +28,9 @@ When asked about "npm install", select **"No"**.
 ### Make a new command
 
 ```shell
-php artisan make:command Test --command=app:test
+php artisan make:command Hello --command=app:hello
 ```
-This will create a new command class in `app/Console/Commands/Test.php`. The `--command=app:test` option sets the invokable name of your command, so you can run it later using `php artisan app:test`.
+This will create a new command class in `app/Console/Commands/Hello.php`. The `--command=app:hello` option sets the invokable name of your command, so you can run it later using `php artisan app:hello`.
 
 ### Task Scheduling in GitHub Actions
 
