@@ -37,5 +37,22 @@ This will create a new command class in `app/Console/Commands/Hello.php`. The `-
 [cron.yml](./.github/workflows/cron.yml) is an example of how to run the command in GitHub Actions.
 This workflow file demonstrates how to set up a cron-like schedule to execute your Artisan commands automatically. You'll need to customize it with the specific commands you want to run and their desired frequency. Remember to configure repository secrets for any sensitive information your commands might need (e.g., API keys, database credentials).
 
+## Notifications
+
+Laravel's built-in notification system provides a convenient way to send notifications from your console commands. This is particularly useful for:
+
+-   Alerting you when a long-running task completes.
+-   Reporting errors or issues encountered during command execution.
+-   Sending updates or summaries to email, Slack, or other chat platforms.
+
+To use this feature, you'll typically create a notification class (e.g., using `php artisan make:notification TaskCompleted`) and then send it using the `Notifiable` trait in your User model or via the `Notification` facade. You will need to configure your desired notification channels (like mail, Slack, etc.) in your Laravel application. When configuring notification channels, especially those relying on external services or specific mail drivers, you may need to publish the relevant configuration files if they don't already exist in your `config` directory. You can do this using the following Artisan commands:
+
+```shell
+php artisan config:publish mail
+php artisan config:publish services
+```
+
+The `config/mail.php` file allows you to configure your mailer settings, while `config/services.php` is used to store credentials and settings for various third-party services that Laravel can integrate with for notifications (e.g., Slack, Vonage). For detailed setup and usage, please refer to the official [Laravel Notification documentation](https://laravel.com/docs/notifications).
+
 ## LICENSE
 MIT  
