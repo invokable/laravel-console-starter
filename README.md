@@ -2,18 +2,17 @@
 
 A starter kit for Laravel console applications.
 
-This starter kit is designed to accelerate the development of command-line applications using the Laravel framework. It provides a streamlined foundation by focusing on console-specific features, offering a clean slate without the typical web-related scaffolding. It's an ideal choice for developers looking to build cron jobs, task runners, data processing scripts, or any other CLI tools that can benefit from Laravel's robust components like Eloquent ORM, Task Scheduling, and Artisan command structure, but without the overhead of a full web application setup.
+This starter kit is designed to accelerate the development of command-line applications using the Laravel framework. It provides a streamlined foundation by focusing on console-specific features, offering a clean slate without the typical web-related scaffolding. It's an ideal choice for developers looking to build cron jobs, task runners, data processing scripts, or any other CLI tools that can benefit from Laravel's robust components like its powerful Artisan command structure, task scheduling, and other core utilities, but without the overhead of a full web application setup.
 
 ## Key Features
 - **Focus on Console Applications:** Streamlined for building CLI tools, removing web-specific overhead.
 - **Artisan Command Ready:** Quickly generate and organize your console commands using `php artisan make:command`.
 - **Scheduled Tasks with GitHub Actions:** Includes a pre-configured example (`.github/workflows/cron.yml`) for running your commands on a schedule using GitHub Actions.
-- **Laravel Framework Power:** Leverage familiar Laravel features like Eloquent ORM, database migrations, configuration management, and more for your console applications.
+- **Laravel Framework Power:** Leverage familiar Laravel features like its robust dependency injection container, event system, configuration management, and application testing tools for your console applications.
 
 ## Requirements
 - PHP >= 8.2
 - Laravel Framework ^12.0
-  *(Note: This starter kit is configured for Laravel 12, which is a future release. You may need to adjust `composer.json` to an earlier stable version like `^11.0` if you intend to use it before Laravel 12 is officially available.)*
 - Laravel Installer >= 5.14
 
 ## Installation
