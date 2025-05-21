@@ -20,5 +20,9 @@ php artisan make:command Test --command=app:test
 php artisan config:publish services
 ```
 
+### Task Scheduling in GitHub Actions
+
+[cron.yml](./.github/workflows/cron.yml) is an example of how to run the command in GitHub Actions.
+
 ## LICENSE
 MIT  
