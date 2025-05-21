@@ -2,7 +2,13 @@
 
 A starter template for Laravel console applications.
 
+## Requirements
+- PHP >= 8.2
+- Laravel >= 12.x
+- Laravel Installer >= 5.14
+
 ## Installation
+
 ```shell
 laravel new my-app --using=revolution/laravel-console-starter
 ```
@@ -10,6 +16,7 @@ laravel new my-app --using=revolution/laravel-console-starter
 ## Usage
 
 ### Make a new command
+
 ```shell
 php artisan make:command Test --command=app:test
 ```
