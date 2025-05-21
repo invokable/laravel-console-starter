@@ -1,6 +1,6 @@
 # Laravel Console Starter
 
-A starter template for Laravel console applications.
+A starter kit for Laravel console applications.
 
 ## Requirements
 - PHP >= 8.2
