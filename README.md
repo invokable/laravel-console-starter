@@ -13,6 +13,8 @@ A starter kit for Laravel console applications.
 laravel new my-app --using=revolution/laravel-console-starter
 ```
 
+When asked about "npm install", select **"No"**.
+
 ## Usage
 
 ### Make a new command
