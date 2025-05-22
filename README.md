@@ -18,7 +18,7 @@ This starter kit is designed to accelerate the development of command-line appli
 ## Installation
 
 ```shell
-laravel new my-app --using=revolution/laravel-console-starter
+laravel new my-app --using=revolution/laravel-console-starter --no-interaction
 ```
 
 When asked about "npm install", select **"No"**.
