@@ -58,59 +58,59 @@ The `config/mail.php` file allows you to configure your mailer settings, while `
 
 Here are some ideas for applications that can be built using this starter kit:
 
-### モニタリングと分析
-- ウェブサイトのアップタイム監視とSlackへのアラート送信
-- サーバーリソース使用状況のメール報告
-- SSL証明書の有効期限チェックとメール通知
-- 競合他社の価格変動追跡とDiscord通知
-- APIレスポンスタイムのモニタリングとアラート
-- データベースサイズの成長レポート
-- ウェブサイトのパフォーマンススコア（Lighthouse）の定期チェック
+### Monitoring and Analytics
+- Website uptime monitoring with Slack alerts
+- Server resource usage reports via email
+- SSL certificate expiration checks and email notifications
+- Competitor price change tracking with Discord notifications
+- API response time monitoring and alerts
+- Database size growth reports
+- Website performance score (Lighthouse) periodic checks
 
-### 財務とビジネス
-- Google AdSenseの収益をメールで送信
-- AWSコストをDiscordに通知
-- 暗号通貨ポートフォリオの日次更新をTelegramに送信
-- 株価アラートをSlackチャンネルに通知
-- 請求書支払い期限リマインダーの送信
-- 月次経費レポートの生成と送信
-- サブスクリプション更新アラート
+### Finance and Business
+- Send Google AdSense revenue via email
+- Notify AWS costs to Discord
+- Daily cryptocurrency portfolio updates to Telegram
+- Stock price alerts to Slack channels
+- Invoice payment deadline reminders
+- Monthly expense report generation and delivery
+- Subscription renewal alerts
 
-### データ処理とレポート
-- データベースバックアップと完了状態通知
-- 古いログファイルのクリーンアップと保存容量レポート
-- 異なるAPI間のデータ同期と結果レポート
-- CSVデータのインポートと処理結果の通知
-- データベースの整合性チェックと問題レポート
-- キャッシュクリーンアップと最適化レポート
-- 定期的なデータエクスポートとクラウドストレージへのアップロード
+### Data Processing and Reports
+- Database backup and completion status notifications
+- Old log file cleanup and storage space reports
+- Data synchronization between different APIs with result reports
+- CSV data import and processing result notifications
+- Database integrity checks and issue reports
+- Cache cleanup and optimization reports
+- Periodic data exports and uploads to cloud storage
 
-### コンテンツとマーケティング
-- ウェブサイトの壊れたリンクチェックとレポート
-- SEOキーワードランキングのモニタリングと変動通知
-- ソーシャルメディアフォロワー数の変動レポート
-- ブログ投稿パフォーマンス指標の週次レポート
-- コンテンツ公開スケジュールのリマインダー
-- RSSフィードから新しいコンテンツを集約して通知
-- メールマーケティングキャンペーンの結果レポート
+### Content and Marketing
+- Website broken link checks and reports
+- SEO keyword ranking monitoring and change notifications
+- Social media follower count change reports
+- Blog post performance metrics weekly reports
+- Content publication schedule reminders
+- RSS feed content aggregation and notifications
+- Email marketing campaign result reports
 
-### 開発とDevOps
-- GitHubリポジトリの依存関係セキュリティアラート
-- コードベースの静的解析レポート
-- テストカバレッジレポートの生成と通知
-- デプロイ後のアプリケーションヘルスチェック
-- 未使用のクラウドリソースの検出と通知
-- APIドキュメントの変更検出と通知
-- コードベースのTODOコメント集計とリマインダー
+### Development and DevOps
+- GitHub repository dependency security alerts
+- Codebase static analysis reports
+- Test coverage report generation and notifications
+- Post-deployment application health checks
+- Unused cloud resource detection and notifications
+- API documentation change detection and notifications
+- Codebase TODO comment aggregation and reminders
 
-### 個人の生産性
-- 天気予報の毎朝通知
-- カレンダーイベントの日次サマリー
-- 習慣トラッキングとリマインダー
-- 購読サービスの更新日通知
-- 重要な日付や記念日のリマインダー
-- 定期的なバックアップリマインダー
-- 健康データの集計と傾向レポート
+### Personal Productivity
+- Daily morning weather forecast notifications
+- Calendar event daily summaries
+- Habit tracking and reminders
+- Subscription service renewal date notifications
+- Important dates and anniversary reminders
+- Regular backup reminders
+- Health data aggregation and trend reports
 
 ## LICENSE
-MIT    
+MIT        
