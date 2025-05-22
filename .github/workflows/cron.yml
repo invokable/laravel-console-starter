@@ -1,7 +1,6 @@
 name: cron
 
 on:
-  #push:
   schedule:
     - cron: '0 0 * * *' #UTC
 
@@ -29,5 +28,5 @@ jobs:
       - name: Generate Application Key
         run: php artisan key:generate
 
-      - name: Run
+      - name: Run Command
         run: php artisan inspire
