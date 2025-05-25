@@ -45,7 +45,6 @@ laravel new my-app --using=revolution/laravel-console-starter --no-interaction
 
 デフォルトでは、以下のようないくつかの設定がされています。
 
-*   **データベース接続**: SQLite を使用するように設定されています (`DB_CONNECTION=sqlite`)。必要に応じて、MySQL や PostgreSQL など、他のデータベースに変更できます。
 *   **メール設定**: メール送信はログに出力するように設定されています (`MAIL_MAILER=log`)。実際のメール送信が必要な場合は、Mailgun、Postmark、SES などのサービスを設定してください。
 
 ## コンソールコマンドの作成 (Creating a Console Command)
