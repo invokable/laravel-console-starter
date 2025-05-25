@@ -68,7 +68,7 @@ Here are some ideas for applications that can be built using this starter kit:
 ### Finance and Business
 - Send Google AdSense revenue via email
 - Notify AWS costs to Discord
-- Daily cryptocurrency portfolio updates to Telegram
+- Daily cryptocurrency portfolio updates to Discord
 - Stock price alerts to Slack channels
 - Invoice payment deadline reminders
 - Monthly expense report generation and delivery
@@ -124,4 +124,4 @@ Here are some ideas for applications that can be built using this starter kit:
 - Daily journal sentiment analysis and summaries
 
 ## LICENSE
-MIT  
+MIT    
