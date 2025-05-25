@@ -139,4 +139,4 @@ php artisan hello:world
     `README.md` には、このスターターキットを使用して構築できるアプリケーションのアイデアがいくつか記載されています（例: データ処理バッチ、API クライアント、システム管理スクリプトなど）。これらを参考に、独自のコンソールアプリケーション開発に挑戦してみてください。
 
 Laravel の豊富なドキュメント ([https://laravel.com/docs](https://laravel.com/docs)) も、開発を進める上で非常に役立ちます。
-Happy coding!
+ハッピーコーディング！
