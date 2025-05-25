@@ -45,7 +45,6 @@ During the project installation process, several initial settings are automatica
 
 By default, several settings are configured as follows:
 
-*   **Database Connection**: Configured to use SQLite (`DB_CONNECTION=sqlite`). You can change this to another database like MySQL or PostgreSQL if needed.
 *   **Mail Settings**: Mail sending is configured to be logged (`MAIL_MAILER=log`). If you need to send actual emails, please configure services like Mailgun, Postmark, or SES.
 
 ## Creating a Console Command
