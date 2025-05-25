@@ -298,19 +298,25 @@ The following examples demonstrate how to build practical applications using Lar
 
 This example demonstrates how to create a command that checks if your websites are online and sends alerts to Slack when issues are detected.
 
-**Step 1: Create the Command**
+**Step 1: Install Slack Notification Channel**
+
+```bash
+composer require laravel/slack-notification-channel
+```
+
+**Step 2: Create the Command**
 
 ```bash
 php artisan make:command MonitorWebsites --command=monitor:websites
 ```
 
-**Step 2: Create a Notification**
+**Step 3: Create a Notification**
 
 ```bash
 php artisan make:notification WebsiteDown
 ```
 
-**Step 3: Configure Slack**
+**Step 4: Configure Slack**
 
 First, publish the services configuration:
 
@@ -332,7 +338,7 @@ And update the `config/services.php` file:
 ],
 ```
 
-**Step 4: Implement the Notification**
+**Step 5: Implement the Notification**
 
 Edit `app/Notifications/WebsiteDown.php`:
 
@@ -439,7 +445,7 @@ class MonitorWebsites extends Command
 }
 ```
 
-**Step 6: Schedule in GitHub Actions**
+**Step 7: Schedule in GitHub Actions**
 
 Update your `.github/workflows/cron.yml` file to run the command every hour:
 
@@ -871,7 +877,7 @@ class WebScraper extends Command
 }
 ```
 
-**Step 6: Schedule in GitHub Actions**
+**Step 7: Schedule in GitHub Actions**
 
 Update your `.github/workflows/cron.yml` file to run the command daily:
 
