@@ -298,19 +298,25 @@ class ProcessDataCommand extends Command
 
 この例では、ウェブサイトがオンラインかどうかを確認し、問題が検出された場合に Slack にアラートを送信するコマンドを作成する方法を示します。
 
-**ステップ 1: コマンドの作成**
+**ステップ 1: Slack 通知チャンネルのインストール**
+
+```bash
+composer require laravel/slack-notification-channel
+```
+
+**ステップ 2: コマンドの作成**
 
 ```bash
 php artisan make:command MonitorWebsites --command=monitor:websites
 ```
 
-**ステップ 2: 通知の作成**
+**ステップ 3: 通知の作成**
 
 ```bash
 php artisan make:notification WebsiteDown
 ```
 
-**ステップ 3: Slack の設定**
+**ステップ 4: Slack の設定**
 
 まず、services 設定を公開します：
 
@@ -332,7 +338,7 @@ SLACK_WEBHOOK_URL=https://hooks.slack.com/services/YOUR/WEBHOOK/URL
 ],
 ```
 
-**ステップ 4: 通知の実装**
+**ステップ 5: 通知の実装**
 
 `app/Notifications/WebsiteDown.php` を編集します：
 
@@ -439,7 +445,7 @@ class MonitorWebsites extends Command
 }
 ```
 
-**ステップ 6: GitHub Actions でのスケジュール設定**
+**ステップ 7: GitHub Actions でのスケジュール設定**
 
 `.github/workflows/cron.yml` ファイルを更新して、コマンドを毎時実行するようにします：
 
@@ -871,7 +877,7 @@ class WebScraper extends Command
 }
 ```
 
-**ステップ 6: GitHub Actions でのスケジュール設定**
+**ステップ 7: GitHub Actions でのスケジュール設定**
 
 `.github/workflows/cron.yml` ファイルを更新して、コマンドを毎日実行するようにします：
 
