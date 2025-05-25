@@ -4,6 +4,8 @@ A starter kit for Laravel console applications.
 
 This starter kit is designed to accelerate the development of command-line applications using the Laravel framework. It provides a streamlined foundation by focusing on console-specific features, offering a clean slate without the typical web-related scaffolding. It's an ideal choice for developers looking to build cron jobs, task runners, data processing scripts, or any other CLI tools that can benefit from Laravel's robust components like its powerful Artisan command structure, task scheduling, and other core utilities, but without the overhead of a full web application setup.
 
+This is not a kit for creating standalone CLI tools.
+
 ## Key Features
 - **Focus on Console Applications:** Streamlined for building CLI tools, removing web-specific overhead.
 - **Artisan Command Ready:** Quickly generate and organize your console commands using `php artisan make:command`.
@@ -124,4 +126,4 @@ Here are some ideas for applications that can be built using this starter kit:
 - Daily journal sentiment analysis and summaries
 
 ## LICENSE
-MIT    
+MIT        
