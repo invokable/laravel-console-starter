@@ -469,23 +469,29 @@ jobs:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
 ```
 
-### 例 2: Telegram への日次暗号資産ポートフォリオ更新
+### 例 2: Discord への日次暗号資産ポートフォリオ更新
 
-この例では、暗号資産の価格を取得し、日次ポートフォリオの概要を Telegram に送信するコマンドを作成する方法を示します。
+この例では、暗号資産の価格を取得し、日次ポートフォリオの概要を Discord に送信するコマンドを作成する方法を示します。
 
-**ステップ 1: コマンドの作成**
+**ステップ 1: Discord 通知パッケージのインストール**
+
+```bash
+composer require revolution/laravel-notification-discord-webhook
+```
+
+**ステップ 2: コマンドの作成**
 
 ```bash
 php artisan make:command CryptoPortfolio --command=crypto:portfolio
 ```
 
-**ステップ 2: 通知の作成**
+**ステップ 3: 通知の作成**
 
 ```bash
 php artisan make:notification CryptoPortfolioUpdate
 ```
 
-**ステップ 3: Telegram の設定**
+**ステップ 4: Discord の設定**
 
 まず、services 設定を公開します：
 
@@ -493,25 +499,18 @@ php artisan make:notification CryptoPortfolioUpdate
 php artisan config:publish services
 ```
 
-次に、Telegram ボットトークンとチャット ID を `.env` ファイルに追加します：
+次に、Discord webhook URL を `.env` ファイルに追加します：
 
 ```
-TELEGRAM_BOT_TOKEN=your_bot_token
-TELEGRAM_CHAT_ID=your_chat_id
+DISCORD_WEBHOOK=https://discord.com/api/webhooks/...
 ```
 
 そして、`config/services.php` ファイルを更新します：
 
 ```php
-'telegram-bot-api' => [
-    'token' => env('TELEGRAM_BOT_TOKEN'),
+'discord' => [
+    'webhook' => env('DISCORD_WEBHOOK'),
 ],
-```
-
-**ステップ 4: Telegram 通知チャネルのインストール**
-
-```bash
-composer require laravel-notification-channels/telegram
 ```
 
 **ステップ 5: 通知の実装**
@@ -524,7 +523,8 @@ composer require laravel-notification-channels/telegram
 namespace App\Notifications;
 
 use Illuminate\Notifications\Notification;
-use NotificationChannels\Telegram\TelegramMessage;
+use Revolution\Laravel\Notification\DiscordWebhook\DiscordChannel;
+use Revolution\Laravel\Notification\DiscordWebhook\DiscordMessage;
 
 class CryptoPortfolioUpdate extends Notification
 {
@@ -539,22 +539,21 @@ class CryptoPortfolioUpdate extends Notification
 
     public function via($notifiable)
     {
-        return ['telegram'];
+        return [DiscordChannel::class];
     }
 
-    public function toTelegram($notifiable)
+    public function toDiscordWebhook($notifiable)
     {
-        $message = "💰 *日次暗号資産ポートフォリオ更新* 💰\n\n";
+        $message = "💰 **日次暗号資産ポートフォリオ更新** 💰\n\n";
         $message .= "ポートフォリオ総額: $" . number_format($this->totalValue, 2) . "\n\n";
         
         foreach ($this->portfolio as $coin) {
             $change = $coin['change_24h'] > 0 ? "↗️ +" : "↘️ ";
-            $message .= "*{$coin['symbol']}*: $" . number_format($coin['price'], 2) . " ({$change}{$coin['change_24h']}%)\n";
+            $message .= "**{$coin['symbol']}**: $" . number_format($coin['price'], 2) . " ({$change}{$coin['change_24h']}%)\n";
             $message .= "保有量: {$coin['amount']} ({$coin['value']})\n\n";
         }
         
-        return TelegramMessage::create()
-            ->content($message);
+        return DiscordMessage::create(content: $message);
     }
 }
 ```
@@ -633,11 +632,11 @@ class CryptoPortfolio extends Command
             $this->info('ポートフォリオ総額: $' . number_format($totalValue, 2));
             
             // 通知を送信
-            $chatId = env('TELEGRAM_CHAT_ID');
-            Notification::route('telegram', $chatId)
+            $webhookUrl = config('services.discord.webhook');
+            Notification::route('discord-webhook', $webhookUrl)
                 ->notify(new CryptoPortfolioUpdate($portfolio, $totalValue));
             
-            $this->info('ポートフォリオ更新が Telegram に送信されました！');
+            $this->info('ポートフォリオ更新が Discord に送信されました！');
             
         } catch (\Exception $e) {
             $this->error('エラー: ' . $e->getMessage());
@@ -671,8 +670,7 @@ jobs:
       - name: Update Crypto Portfolio
         run: php artisan crypto:portfolio
         env:
-          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
-          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
 ```
 
 ### 例 3: ウェブサイトコンテンツのスクレイピングとメール通知

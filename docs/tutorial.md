@@ -469,23 +469,29 @@ jobs:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
 ```
 
-### Example 2: Daily Cryptocurrency Portfolio Updates to Telegram
+### Example 2: Daily Cryptocurrency Portfolio Updates to Discord
 
-This example shows how to create a command that fetches cryptocurrency prices and sends a daily portfolio summary to Telegram.
+This example shows how to create a command that fetches cryptocurrency prices and sends a daily portfolio summary to Discord.
 
-**Step 1: Create the Command**
+**Step 1: Install the Discord Notification Package**
+
+```bash
+composer require revolution/laravel-notification-discord-webhook
+```
+
+**Step 2: Create the Command**
 
 ```bash
 php artisan make:command CryptoPortfolio --command=crypto:portfolio
 ```
 
-**Step 2: Create a Notification**
+**Step 3: Create a Notification**
 
 ```bash
 php artisan make:notification CryptoPortfolioUpdate
 ```
 
-**Step 3: Configure Telegram**
+**Step 4: Configure Discord**
 
 First, publish the services configuration:
 
@@ -493,25 +499,18 @@ First, publish the services configuration:
 php artisan config:publish services
 ```
 
-Then, add your Telegram bot token and chat ID to the `.env` file:
+Then, add your Discord webhook URL to the `.env` file:
 
 ```
-TELEGRAM_BOT_TOKEN=your_bot_token
-TELEGRAM_CHAT_ID=your_chat_id
+DISCORD_WEBHOOK=https://discord.com/api/webhooks/...
 ```
 
 And update the `config/services.php` file:
 
 ```php
-'telegram-bot-api' => [
-    'token' => env('TELEGRAM_BOT_TOKEN'),
+'discord' => [
+    'webhook' => env('DISCORD_WEBHOOK'),
 ],
-```
-
-**Step 4: Install the Telegram Notification Channel**
-
-```bash
-composer require laravel-notification-channels/telegram
 ```
 
 **Step 5: Implement the Notification**
@@ -524,7 +523,8 @@ Edit `app/Notifications/CryptoPortfolioUpdate.php`:
 namespace App\Notifications;
 
 use Illuminate\Notifications\Notification;
-use NotificationChannels\Telegram\TelegramMessage;
+use Revolution\Laravel\Notification\DiscordWebhook\DiscordChannel;
+use Revolution\Laravel\Notification\DiscordWebhook\DiscordMessage;
 
 class CryptoPortfolioUpdate extends Notification
 {
@@ -539,22 +539,21 @@ class CryptoPortfolioUpdate extends Notification
 
     public function via($notifiable)
     {
-        return ['telegram'];
+        return [DiscordChannel::class];
     }
 
-    public function toTelegram($notifiable)
+    public function toDiscordWebhook($notifiable)
     {
-        $message = "💰 *Daily Crypto Portfolio Update* 💰\n\n";
+        $message = "💰 **Daily Crypto Portfolio Update** 💰\n\n";
         $message .= "Total Portfolio Value: $" . number_format($this->totalValue, 2) . "\n\n";
         
         foreach ($this->portfolio as $coin) {
             $change = $coin['change_24h'] > 0 ? "↗️ +" : "↘️ ";
-            $message .= "*{$coin['symbol']}*: $" . number_format($coin['price'], 2) . " ({$change}{$coin['change_24h']}%)\n";
+            $message .= "**{$coin['symbol']}**: $" . number_format($coin['price'], 2) . " ({$change}{$coin['change_24h']}%)\n";
             $message .= "Holdings: {$coin['amount']} ({$coin['value']})\n\n";
         }
         
-        return TelegramMessage::create()
-            ->content($message);
+        return DiscordMessage::create(content: $message);
     }
 }
 ```
@@ -633,11 +632,11 @@ class CryptoPortfolio extends Command
             $this->info('Total portfolio value: $' . number_format($totalValue, 2));
             
             // Send notification
-            $chatId = env('TELEGRAM_CHAT_ID');
-            Notification::route('telegram', $chatId)
+            $webhookUrl = config('services.discord.webhook');
+            Notification::route('discord-webhook', $webhookUrl)
                 ->notify(new CryptoPortfolioUpdate($portfolio, $totalValue));
             
-            $this->info('Portfolio update sent to Telegram!');
+            $this->info('Portfolio update sent to Discord!');
             
         } catch (\Exception $e) {
             $this->error('Error: ' . $e->getMessage());
@@ -671,8 +670,7 @@ jobs:
       - name: Update Crypto Portfolio
         run: php artisan crypto:portfolio
         env:
-          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
-          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
 ```
 
 ### Example 3: Website Content Scraping and Email Notification
