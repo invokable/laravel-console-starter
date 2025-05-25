@@ -669,20 +669,20 @@ jobs:
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
 ```
 
-### 例 3: データベースバックアップと通知
+### 例 3: ウェブサイトコンテンツのスクレイピングとメール通知
 
-この例では、データベースバックアップを実行し、完了ステータスの通知を送信するコマンドを作成する方法を示します。
+この例では、ウェブサイトからコンテンツをスクレイピングし、抽出したデータをメール通知で送信するコマンドを作成する方法を示します。
 
 **ステップ 1: コマンドの作成**
 
 ```bash
-php artisan make:command DatabaseBackup --command=db:backup
+php artisan make:command WebScraper --command=scrape:website
 ```
 
 **ステップ 2: 通知の作成**
 
 ```bash
-php artisan make:notification BackupCompleted
+php artisan make:notification ScrapingCompleted
 ```
 
 **ステップ 3: メールの設定**
@@ -708,7 +708,7 @@ MAIL_FROM_NAME="${APP_NAME}"
 
 **ステップ 4: 通知の実装**
 
-`app/Notifications/BackupCompleted.php` を編集します：
+`app/Notifications/ScrapingCompleted.php` を編集します：
 
 ```php
 <?php
@@ -719,20 +719,22 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
-class BackupCompleted extends Notification
+class ScrapingCompleted extends Notification
 {
     use Queueable;
 
     protected $success;
-    protected $filename;
-    protected $size;
+    protected $url;
+    protected $title;
+    protected $content;
     protected $error;
 
-    public function __construct($success, $filename = null, $size = null, $error = null)
+    public function __construct($success, $url = null, $title = null, $content = null, $error = null)
     {
         $this->success = $success;
-        $this->filename = $filename;
-        $this->size = $size;
+        $this->url = $url;
+        $this->title = $title;
+        $this->content = $content;
         $this->error = $error;
     }
 
@@ -744,16 +746,18 @@ class BackupCompleted extends Notification
     public function toMail($notifiable)
     {
         $message = (new MailMessage)
-            ->subject($this->success ? 'データベースバックアップが正常に完了しました' : 'データベースバックアップが失敗しました');
+            ->subject($this->success ? 'ウェブサイトスクレイピングが正常に完了しました' : 'ウェブサイトスクレイピングが失敗しました');
         
         if ($this->success) {
-            $message->line('データベースバックアップが正常に完了しました。')
-                    ->line('バックアップファイル: ' . $this->filename)
-                    ->line('サイズ: ' . $this->formatBytes($this->size))
+            $message->line('ウェブサイトのコンテンツが正常にスクレイピングされました。')
+                    ->line('URL: ' . $this->url)
+                    ->line('タイトル: ' . $this->title)
+                    ->line('コンテンツプレビュー: ' . $this->getContentPreview())
                     ->line('日時: ' . now()->format('Y-m-d H:i:s'))
                     ->success();
         } else {
-            $message->line('データベースバックアップが失敗しました。')
+            $message->line('ウェブサイトのスクレイピングが失敗しました。')
+                    ->line('URL: ' . $this->url)
                     ->line('エラー: ' . $this->error)
                     ->line('日時: ' . now()->format('Y-m-d H:i:s'))
                     ->error();
@@ -762,151 +766,132 @@ class BackupCompleted extends Notification
         return $message;
     }
     
-    protected function formatBytes($bytes, $precision = 2)
+    protected function getContentPreview($maxLength = 200)
     {
-        $units = ['B', 'KB', 'MB', 'GB', 'TB'];
+        if (empty($this->content)) {
+            return 'コンテンツがありません';
+        }
         
-        $bytes = max($bytes, 0);
-        $pow = floor(($bytes ? log($bytes) : 0) / log(1024));
-        $pow = min($pow, count($units) - 1);
+        $content = strip_tags($this->content);
         
-        $bytes /= (1 << (10 * $pow));
+        if (strlen($content) <= $maxLength) {
+            return $content;
+        }
         
-        return round($bytes, $precision) . ' ' . $units[$pow];
+        return substr($content, 0, $maxLength) . '...';
     }
 }
 ```
 
 **ステップ 5: コマンドの実装**
 
-`app/Console/Commands/DatabaseBackup.php` を編集します：
+`app/Console/Commands/WebScraper.php` を編集します：
 
 ```php
 <?php
 
 namespace App\Console\Commands;
 
-use App\Notifications\BackupCompleted;
+use App\Notifications\ScrapingCompleted;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Notification;
-use Illuminate\Support\Facades\Storage;
-use Symfony\Component\Process\Process;
 
-class DatabaseBackup extends Command
+class WebScraper extends Command
 {
-    protected $signature = 'db:backup {--database=mysql} {--email=admin@example.com}';
-    protected $description = 'データベースバックアップを作成し、通知を送信';
+    protected $signature = 'scrape:website {--url=https://example.com} {--email=admin@example.com}';
+    protected $description = 'ウェブサイトからコンテンツをスクレイピングし、通知を送信';
 
     public function handle()
     {
-        $database = $this->option('database');
+        $url = $this->option('url');
         $email = $this->option('email');
         
-        $this->info("{$database} データベースのバックアップを開始...");
-        
-        // バックアップディレクトリが存在しない場合は作成
-        $backupPath = storage_path('app/backups');
-        if (!file_exists($backupPath)) {
-            mkdir($backupPath, 0755, true);
-        }
-        
-        // バックアップファイル名の生成
-        $filename = $database . '_' . date('Y-m-d_H-i-s') . '.sql';
-        $filepath = $backupPath . '/' . $filename;
+        $this->info("{$url} からコンテンツのスクレイピングを開始...");
         
         try {
-            // データベース設定の取得
-            $host = config("database.connections.{$database}.host");
-            $port = config("database.connections.{$database}.port");
-            $dbName = config("database.connections.{$database}.database");
-            $username = config("database.connections.{$database}.username");
-            $password = config("database.connections.{$database}.password");
+            // ウェブサイトへの HTTP リクエスト
+            $response = Http::timeout(30)->get($url);
             
-            // mysqldump コマンドの構築
-            $command = "mysqldump --host={$host} --port={$port} --user={$username} --password={$password} {$dbName} > {$filepath}";
-            
-            // コマンドの実行
-            $process = Process::fromShellCommandline($command);
-            $process->setTimeout(3600); // 1 時間のタイムアウト
-            $process->run();
-            
-            if (!$process->isSuccessful()) {
-                throw new \Exception($process->getErrorOutput());
+            // リクエストが成功したか確認
+            if (!$response->successful()) {
+                throw new \Exception("HTTP リクエストがステータスコード " . $response->status() . " で失敗しました");
             }
             
-            // バックアップファイルが存在するか確認し、サイズを取得
-            if (!file_exists($filepath)) {
-                throw new \Exception("バックアップファイルが作成されませんでした");
-            }
+            $html = $response->body();
             
-            $size = filesize($filepath);
+            // タイトルの抽出
+            preg_match('/<title>(.*?)<\/title>/i', $html, $titleMatches);
+            $title = $titleMatches[1] ?? 'タイトルが見つかりません';
             
-            $this->info("バックアップが正常に完了しました: {$filepath} (" . $this->formatBytes($size) . ")");
-            Log::info("データベースバックアップが完了しました", ['file' => $filename, 'size' => $size]);
+            // メインコンテンツの抽出（簡略化したアプローチ）
+            preg_match('/<body.*?>(.*?)<\/body>/is', $html, $bodyMatches);
+            $body = $bodyMatches[1] ?? '';
+            
+            // コンテンツのクリーンアップ - スクリプト、スタイル、コメントを削除
+            $content = preg_replace('/<script\b[^>]*>(.*?)<\/script>/is', '', $body);
+            $content = preg_replace('/<style\b[^>]*>(.*?)<\/style>/is', '', $content);
+            $content = preg_replace('/<!--(.*?)-->/is', '', $content);
+            
+            // 簡単な例として最初の段落からテキストを抽出
+            preg_match('/<p>(.*?)<\/p>/is', $content, $paragraphMatches);
+            $mainContent = $paragraphMatches[1] ?? 'コンテンツが見つかりません';
+            
+            $this->info("スクレイピングが正常に完了しました！");
+            $this->info("タイトル: {$title}");
+            $this->info("コンテンツプレビュー: " . substr(strip_tags($mainContent), 0, 100) . "...");
+            
+            Log::info("ウェブサイトスクレイピングが完了しました", [
+                'url' => $url,
+                'title' => $title,
+                'content_length' => strlen($mainContent)
+            ]);
             
             // 成功通知の送信
             Notification::route('mail', $email)
-                ->notify(new BackupCompleted(true, $filename, $size));
+                ->notify(new ScrapingCompleted(true, $url, $title, $mainContent));
             
             return Command::SUCCESS;
             
         } catch (\Exception $e) {
-            $this->error("バックアップが失敗しました: " . $e->getMessage());
-            Log::error("データベースバックアップが失敗しました", ['error' => $e->getMessage()]);
+            $this->error("スクレイピングが失敗しました: " . $e->getMessage());
+            Log::error("ウェブサイトスクレイピングが失敗しました", [
+                'url' => $url,
+                'error' => $e->getMessage()
+            ]);
             
             // 失敗通知の送信
             Notification::route('mail', $email)
-                ->notify(new BackupCompleted(false, null, null, $e->getMessage()));
+                ->notify(new ScrapingCompleted(false, $url, null, null, $e->getMessage()));
             
             return Command::FAILURE;
         }
-    }
-    
-    protected function formatBytes($bytes, $precision = 2)
-    {
-        $units = ['B', 'KB', 'MB', 'GB', 'TB'];
-        
-        $bytes = max($bytes, 0);
-        $pow = floor(($bytes ? log($bytes) : 0) / log(1024));
-        $pow = min($pow, count($units) - 1);
-        
-        $bytes /= (1 << (10 * $pow));
-        
-        return round($bytes, $precision) . ' ' . $units[$pow];
     }
 }
 ```
 
 **ステップ 6: GitHub Actions でのスケジュール設定**
 
-`.github/workflows/cron.yml` ファイルを更新して、コマンドを毎週実行するようにします：
+`.github/workflows/cron.yml` ファイルを更新して、コマンドを毎日実行するようにします：
 
 ```yaml
-name: Database Backup
+name: Website Scraping
 
 on:
   schedule:
-    - cron: '0 0 * * 0' # 毎週日曜日の UTC 午前 0 時に実行
+    - cron: '0 8 * * *' # 毎日 UTC 午前 8 時に実行
 
 jobs:
-  backup:
+  scrape:
     runs-on: ubuntu-latest
     
     steps:
       # ... 標準的なセットアップステップ ...
       
-      - name: Install MySQL client
-        run: sudo apt-get install -y mysql-client
-      
-      - name: Backup Database
-        run: php artisan db:backup --email=${{ secrets.ADMIN_EMAIL }}
+      - name: Scrape Website
+        run: php artisan scrape:website --email=${{ secrets.ADMIN_EMAIL }}
         env:
-          DB_HOST: ${{ secrets.DB_HOST }}
-          DB_PORT: ${{ secrets.DB_PORT }}
-          DB_DATABASE: ${{ secrets.DB_DATABASE }}
-          DB_USERNAME: ${{ secrets.DB_USERNAME }}
-          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
           MAIL_HOST: ${{ secrets.MAIL_HOST }}
           MAIL_PORT: ${{ secrets.MAIL_PORT }}
           MAIL_USERNAME: ${{ secrets.MAIL_USERNAME }}
