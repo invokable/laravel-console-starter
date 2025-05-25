@@ -125,5 +125,12 @@ Here are some ideas for applications that can be built using this starter kit:
 - Personal spending category insights and visual reports  
 - Daily journal sentiment analysis and summaries
 
+## Documentation
+
+For detailed usage instructions and examples, please refer to our comprehensive tutorials:
+
+- [Tutorial (English)](./docs/tutorial.md)
+- [チュートリアル (日本語)](./docs/tutorial_ja.md)
+
 ## LICENSE
 MIT        
