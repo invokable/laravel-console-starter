@@ -632,7 +632,7 @@ class CryptoPortfolio extends Command
             $this->info('ポートフォリオ総額: $' . number_format($totalValue, 2));
             
             // 通知を送信
-            $webhookUrl = env('DISCORD_WEBHOOK');
+            $webhookUrl = config('services.discord.webhook');
             Notification::route('discord-webhook', $webhookUrl)
                 ->notify(new CryptoPortfolioUpdate($portfolio, $totalValue));
             
