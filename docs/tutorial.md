@@ -669,20 +669,20 @@ jobs:
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
 ```
 
-### Example 3: Database Backup and Notification
+### Example 3: Website Content Scraping and Email Notification
 
-This example demonstrates how to create a command that performs database backups and sends completion status notifications.
+This example demonstrates how to create a command that scrapes content from a website and sends the extracted data via email notification.
 
 **Step 1: Create the Command**
 
 ```bash
-php artisan make:command DatabaseBackup --command=db:backup
+php artisan make:command WebScraper --command=scrape:website
 ```
 
 **Step 2: Create a Notification**
 
 ```bash
-php artisan make:notification BackupCompleted
+php artisan make:notification ScrapingCompleted
 ```
 
 **Step 3: Configure Email**
@@ -708,7 +708,7 @@ MAIL_FROM_NAME="${APP_NAME}"
 
 **Step 4: Implement the Notification**
 
-Edit `app/Notifications/BackupCompleted.php`:
+Edit `app/Notifications/ScrapingCompleted.php`:
 
 ```php
 <?php
@@ -719,20 +719,22 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
-class BackupCompleted extends Notification
+class ScrapingCompleted extends Notification
 {
     use Queueable;
 
     protected $success;
-    protected $filename;
-    protected $size;
+    protected $url;
+    protected $title;
+    protected $content;
     protected $error;
 
-    public function __construct($success, $filename = null, $size = null, $error = null)
+    public function __construct($success, $url = null, $title = null, $content = null, $error = null)
     {
         $this->success = $success;
-        $this->filename = $filename;
-        $this->size = $size;
+        $this->url = $url;
+        $this->title = $title;
+        $this->content = $content;
         $this->error = $error;
     }
 
@@ -744,16 +746,18 @@ class BackupCompleted extends Notification
     public function toMail($notifiable)
     {
         $message = (new MailMessage)
-            ->subject($this->success ? 'Database Backup Completed Successfully' : 'Database Backup Failed');
+            ->subject($this->success ? 'Website Scraping Completed Successfully' : 'Website Scraping Failed');
         
         if ($this->success) {
-            $message->line('The database backup has completed successfully.')
-                    ->line('Backup file: ' . $this->filename)
-                    ->line('Size: ' . $this->formatBytes($this->size))
+            $message->line('The website content has been successfully scraped.')
+                    ->line('URL: ' . $this->url)
+                    ->line('Title: ' . $this->title)
+                    ->line('Content Preview: ' . $this->getContentPreview())
                     ->line('Date: ' . now()->format('Y-m-d H:i:s'))
                     ->success();
         } else {
-            $message->line('The database backup has failed.')
+            $message->line('The website scraping has failed.')
+                    ->line('URL: ' . $this->url)
                     ->line('Error: ' . $this->error)
                     ->line('Date: ' . now()->format('Y-m-d H:i:s'))
                     ->error();
@@ -762,151 +766,132 @@ class BackupCompleted extends Notification
         return $message;
     }
     
-    protected function formatBytes($bytes, $precision = 2)
+    protected function getContentPreview($maxLength = 200)
     {
-        $units = ['B', 'KB', 'MB', 'GB', 'TB'];
+        if (empty($this->content)) {
+            return 'No content available';
+        }
         
-        $bytes = max($bytes, 0);
-        $pow = floor(($bytes ? log($bytes) : 0) / log(1024));
-        $pow = min($pow, count($units) - 1);
+        $content = strip_tags($this->content);
         
-        $bytes /= (1 << (10 * $pow));
+        if (strlen($content) <= $maxLength) {
+            return $content;
+        }
         
-        return round($bytes, $precision) . ' ' . $units[$pow];
+        return substr($content, 0, $maxLength) . '...';
     }
 }
 ```
 
 **Step 5: Implement the Command**
 
-Edit `app/Console/Commands/DatabaseBackup.php`:
+Edit `app/Console/Commands/WebScraper.php`:
 
 ```php
 <?php
 
 namespace App\Console\Commands;
 
-use App\Notifications\BackupCompleted;
+use App\Notifications\ScrapingCompleted;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Notification;
-use Illuminate\Support\Facades\Storage;
-use Symfony\Component\Process\Process;
 
-class DatabaseBackup extends Command
+class WebScraper extends Command
 {
-    protected $signature = 'db:backup {--database=mysql} {--email=admin@example.com}';
-    protected $description = 'Create a database backup and send notification';
+    protected $signature = 'scrape:website {--url=https://example.com} {--email=admin@example.com}';
+    protected $description = 'Scrape content from a website and send notification';
 
     public function handle()
     {
-        $database = $this->option('database');
+        $url = $this->option('url');
         $email = $this->option('email');
         
-        $this->info("Starting backup of {$database} database...");
-        
-        // Create backup directory if it doesn't exist
-        $backupPath = storage_path('app/backups');
-        if (!file_exists($backupPath)) {
-            mkdir($backupPath, 0755, true);
-        }
-        
-        // Generate backup filename
-        $filename = $database . '_' . date('Y-m-d_H-i-s') . '.sql';
-        $filepath = $backupPath . '/' . $filename;
+        $this->info("Starting to scrape content from {$url}...");
         
         try {
-            // Get database configuration
-            $host = config("database.connections.{$database}.host");
-            $port = config("database.connections.{$database}.port");
-            $dbName = config("database.connections.{$database}.database");
-            $username = config("database.connections.{$database}.username");
-            $password = config("database.connections.{$database}.password");
+            // Make HTTP request to the website
+            $response = Http::timeout(30)->get($url);
             
-            // Build mysqldump command
-            $command = "mysqldump --host={$host} --port={$port} --user={$username} --password={$password} {$dbName} > {$filepath}";
-            
-            // Execute the command
-            $process = Process::fromShellCommandline($command);
-            $process->setTimeout(3600); // 1 hour timeout
-            $process->run();
-            
-            if (!$process->isSuccessful()) {
-                throw new \Exception($process->getErrorOutput());
+            // Check if request was successful
+            if (!$response->successful()) {
+                throw new \Exception("HTTP request failed with status code: " . $response->status());
             }
             
-            // Check if backup file exists and get its size
-            if (!file_exists($filepath)) {
-                throw new \Exception("Backup file was not created");
-            }
+            $html = $response->body();
             
-            $size = filesize($filepath);
+            // Extract title
+            preg_match('/<title>(.*?)<\/title>/i', $html, $titleMatches);
+            $title = $titleMatches[1] ?? 'No title found';
             
-            $this->info("Backup completed successfully: {$filepath} (" . $this->formatBytes($size) . ")");
-            Log::info("Database backup completed", ['file' => $filename, 'size' => $size]);
+            // Extract main content (simplified approach)
+            preg_match('/<body.*?>(.*?)<\/body>/is', $html, $bodyMatches);
+            $body = $bodyMatches[1] ?? '';
+            
+            // Clean up content - remove scripts, styles, and comments
+            $content = preg_replace('/<script\b[^>]*>(.*?)<\/script>/is', '', $body);
+            $content = preg_replace('/<style\b[^>]*>(.*?)<\/style>/is', '', $content);
+            $content = preg_replace('/<!--(.*?)-->/is', '', $content);
+            
+            // Extract text from the first paragraph as a simple example
+            preg_match('/<p>(.*?)<\/p>/is', $content, $paragraphMatches);
+            $mainContent = $paragraphMatches[1] ?? 'No content found';
+            
+            $this->info("Scraping completed successfully!");
+            $this->info("Title: {$title}");
+            $this->info("Content preview: " . substr(strip_tags($mainContent), 0, 100) . "...");
+            
+            Log::info("Website scraping completed", [
+                'url' => $url,
+                'title' => $title,
+                'content_length' => strlen($mainContent)
+            ]);
             
             // Send success notification
             Notification::route('mail', $email)
-                ->notify(new BackupCompleted(true, $filename, $size));
+                ->notify(new ScrapingCompleted(true, $url, $title, $mainContent));
             
             return Command::SUCCESS;
             
         } catch (\Exception $e) {
-            $this->error("Backup failed: " . $e->getMessage());
-            Log::error("Database backup failed", ['error' => $e->getMessage()]);
+            $this->error("Scraping failed: " . $e->getMessage());
+            Log::error("Website scraping failed", [
+                'url' => $url,
+                'error' => $e->getMessage()
+            ]);
             
             // Send failure notification
             Notification::route('mail', $email)
-                ->notify(new BackupCompleted(false, null, null, $e->getMessage()));
+                ->notify(new ScrapingCompleted(false, $url, null, null, $e->getMessage()));
             
             return Command::FAILURE;
         }
-    }
-    
-    protected function formatBytes($bytes, $precision = 2)
-    {
-        $units = ['B', 'KB', 'MB', 'GB', 'TB'];
-        
-        $bytes = max($bytes, 0);
-        $pow = floor(($bytes ? log($bytes) : 0) / log(1024));
-        $pow = min($pow, count($units) - 1);
-        
-        $bytes /= (1 << (10 * $pow));
-        
-        return round($bytes, $precision) . ' ' . $units[$pow];
     }
 }
 ```
 
 **Step 6: Schedule in GitHub Actions**
 
-Update your `.github/workflows/cron.yml` file to run the command weekly:
+Update your `.github/workflows/cron.yml` file to run the command daily:
 
 ```yaml
-name: Database Backup
+name: Website Scraping
 
 on:
   schedule:
-    - cron: '0 0 * * 0' # Run weekly on Sunday at midnight UTC
+    - cron: '0 8 * * *' # Run daily at 8 AM UTC
 
 jobs:
-  backup:
+  scrape:
     runs-on: ubuntu-latest
     
     steps:
       # ... standard setup steps ...
       
-      - name: Install MySQL client
-        run: sudo apt-get install -y mysql-client
-      
-      - name: Backup Database
-        run: php artisan db:backup --email=${{ secrets.ADMIN_EMAIL }}
+      - name: Scrape Website
+        run: php artisan scrape:website --email=${{ secrets.ADMIN_EMAIL }}
         env:
-          DB_HOST: ${{ secrets.DB_HOST }}
-          DB_PORT: ${{ secrets.DB_PORT }}
-          DB_DATABASE: ${{ secrets.DB_DATABASE }}
-          DB_USERNAME: ${{ secrets.DB_USERNAME }}
-          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
           MAIL_HOST: ${{ secrets.MAIL_HOST }}
           MAIL_PORT: ${{ secrets.MAIL_PORT }}
           MAIL_USERNAME: ${{ secrets.MAIL_USERNAME }}
