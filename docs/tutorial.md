@@ -209,14 +209,6 @@ When your commands require access to sensitive information like API keys, databa
        DB_PASSWORD: ${{ secrets.DATABASE_PASSWORD }}
    ```
 
-3. **Use Secrets in Environment File**:
-   ```yaml
-   - name: Update Environment File
-     run: |
-       echo "API_KEY=${{ secrets.API_KEY }}" >> .env
-       echo "DB_PASSWORD=${{ secrets.DATABASE_PASSWORD }}" >> .env
-   ```
-
 By using GitHub Actions for task scheduling, you can run your Laravel console commands on a regular schedule without maintaining a server with cron jobs. This approach is especially useful for tasks like data processing, reporting, monitoring, and sending notifications.
 
 ## Notification Feature
