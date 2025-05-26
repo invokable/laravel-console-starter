@@ -209,14 +209,6 @@ jobs:
        DB_PASSWORD: ${{ secrets.DATABASE_PASSWORD }}
    ```
 
-3. **環境ファイルでシークレットを使用**:
-   ```yaml
-   - name: Update Environment File
-     run: |
-       echo "API_KEY=${{ secrets.API_KEY }}" >> .env
-       echo "DB_PASSWORD=${{ secrets.DATABASE_PASSWORD }}" >> .env
-   ```
-
 GitHub Actions を使用したタスクスケジューリングにより、サーバーで cron ジョブを維持することなく、定期的なスケジュールで Laravel コンソールコマンドを実行できます。このアプローチは、データ処理、レポート作成、監視、通知の送信などのタスクに特に役立ちます。
 
 ## 通知機能 (Notification Feature)
