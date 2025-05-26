@@ -9,3 +9,4 @@
 /.github export-ignore
 LICENSE export-ignore
 composer.lock export-ignore
+/docs export-ignore
