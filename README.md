@@ -1,10 +1,8 @@
 # Laravel Console Starter
 
-A starter kit for Laravel console applications.
+A streamlined Laravel starter kit for building applications with custom artisan commands.
 
-This starter kit is designed to accelerate the development of command-line applications using the Laravel framework. It provides a streamlined foundation by focusing on console-specific features, offering a clean slate without the typical web-related scaffolding. It's an ideal choice for developers looking to build cron jobs, task runners, data processing scripts, or any other CLI tools that can benefit from Laravel's robust components like its powerful Artisan command structure, task scheduling, and other core utilities, but without the overhead of a full web application setup.
-
-This is not a kit for creating standalone CLI tools.
+This starter kit accelerates the development of Laravel applications that primarily use artisan commands for their functionality. Instead of building standalone CLI tools, you create powerful Laravel console applications that leverage the full Laravel framework ecosystem - including dependency injection, notifications, scheduling, and testing tools. Perfect for building scheduled tasks, data processing workflows, monitoring scripts, and automated maintenance tools that benefit from Laravel's robust architecture without the web application overhead.
 
 ## Key Features
 - **Focus on Console Applications:** Streamlined for building CLI tools, removing web-specific overhead.
@@ -133,4 +131,4 @@ For detailed usage instructions and examples, please refer to our comprehensive 
 - [チュートリアル (日本語)](./docs/tutorial_ja.md)
 
 ## LICENSE
-MIT        
+MIT                
