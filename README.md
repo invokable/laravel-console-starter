@@ -5,7 +5,7 @@ A streamlined Laravel starter kit for building applications with custom artisan 
 This starter kit accelerates the development of Laravel applications that primarily use artisan commands for their functionality. Instead of building standalone CLI tools, you create powerful Laravel console applications that leverage the full Laravel framework ecosystem - including dependency injection, notifications, scheduling, and testing tools. Perfect for building scheduled tasks, data processing workflows, monitoring scripts, and automated maintenance tools that benefit from Laravel's robust architecture without the web application overhead.
 
 ## Key Features
-- **Focus on Console Applications:** Streamlined for building CLI tools, removing web-specific overhead.
+- **Focus on Console Applications:** Streamlined for building Laravel applications with artisan commands, removing web-specific overhead.
 - **Artisan Command Ready:** Quickly generate and organize your console commands using `php artisan make:command`.
 - **Scheduled Tasks with GitHub Actions:** Includes a pre-configured example (`.github/workflows/cron.yml`) for running your commands on a schedule using GitHub Actions.
 - **Laravel Framework Power:** Leverage familiar Laravel features like its robust dependency injection container, event system, configuration management, and application testing tools for your console applications.
@@ -131,4 +131,4 @@ For detailed usage instructions and examples, please refer to our comprehensive 
 - [チュートリアル (日本語)](./docs/tutorial_ja.md)
 
 ## LICENSE
-MIT                
+MIT                                
