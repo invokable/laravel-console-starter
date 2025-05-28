@@ -2,7 +2,7 @@
 
 ## はじめに (Introduction)
 
-このドキュメントは、`revolution/laravel-console-starter` を使用して Laravel コンソールアプリケーションを開発するためのチュートリアルです。このスターターキットは、Laravel の強力な機能を活用して、CLI (コマンドラインインターフェース) アプリケーションを迅速に構築するために設計されています。
+このドキュメントは、`revolution/laravel-console-starter` を使用してカスタムartisanコマンドを持つLaravelアプリケーションを開発するためのチュートリアルです。このスターターキットは、スタンドアロンのCLIツールを構築するのではなく、Laravel フレームワークのエコシステム全体を活用して、主にartisanコマンドを使用する機能を持つLaravelアプリケーションの開発を加速するために設計されています。
 
 `revolution/laravel-console-starter` を利用するメリット：
 

@@ -2,7 +2,7 @@
 
 ## Introduction
 
-This document is a tutorial for developing Laravel console applications using `revolution/laravel-console-starter`. This starter kit is designed to quickly build CLI (Command Line Interface) applications by leveraging the powerful features of Laravel.
+This document is a tutorial for developing Laravel applications with custom artisan commands using `revolution/laravel-console-starter`. This starter kit is designed to accelerate the development of Laravel applications that primarily use artisan commands for their functionality, leveraging the full Laravel framework ecosystem rather than building standalone CLI tools.
 
 Benefits of using `revolution/laravel-console-starter`:
 
