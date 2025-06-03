@@ -46,12 +46,14 @@ While console applications may not frequently use local databases, it's common t
 Example of environment variable configuration in a workflow:
 
 ```yaml
-env:
-  APP_KEY: ${{ secrets.APP_KEY }}
-  DB_HOST: ${{ secrets.DB_HOST }}
-  DB_DATABASE: ${{ secrets.DB_DATABASE }}
-  DB_USERNAME: ${{ secrets.DB_USERNAME }}
-  DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+      - name: Run Command
+        run: php artisan inspire
+        env:
+          APP_KEY: ${{ secrets.APP_KEY }}
+          DB_HOST: ${{ secrets.DB_HOST }}
+          DB_DATABASE: ${{ secrets.DB_DATABASE }}
+          DB_USERNAME: ${{ secrets.DB_USERNAME }}
+          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
 ```
 
 ## Notifications
