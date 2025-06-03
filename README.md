@@ -4,6 +4,7 @@ A streamlined Laravel starter kit for building applications with custom artisan 
 
 This starter kit accelerates the development of Laravel applications that primarily use artisan commands for their functionality. Instead of building standalone CLI tools, you create powerful Laravel console applications that leverage the full Laravel framework ecosystem - including dependency injection, notifications, scheduling, and testing tools. Perfect for building scheduled tasks, data processing workflows, monitoring scripts, and automated maintenance tools that benefit from Laravel's robust architecture without the web application overhead.
 
+[![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/invokable/laravel-console-starter)
 
 > **Note:** If you would like to create a console only project based on the latest official Laravel skeleton, you can also use the [laravel-slim](https://github.com/invokable/laravel-slim) package.
 
