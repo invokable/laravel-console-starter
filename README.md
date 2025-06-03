@@ -41,6 +41,19 @@ This workflow file demonstrates how to set up a cron-like schedule to execute yo
 
 ### Database
 
+While console applications may not frequently use local databases, it's common to utilize remote databases like AWS RDS when running them in GitHub Actions. Database connection settings should be configured using secrets.
+
+Example of environment variable configuration in a workflow:
+
+```yaml
+env:
+  APP_KEY: ${{ secrets.APP_KEY }}
+  DB_HOST: ${{ secrets.DB_HOST }}
+  DB_DATABASE: ${{ secrets.DB_DATABASE }}
+  DB_USERNAME: ${{ secrets.DB_USERNAME }}
+  DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+```
+
 ## Notifications
 
 Laravel's built-in notification system provides a convenient way to send notifications from your console commands. This is particularly useful for:
@@ -137,4 +150,4 @@ For detailed usage instructions and examples, please refer to our comprehensive 
 - [チュートリアル (日本語)](./docs/tutorial_ja.md)
 
 ## LICENSE
-MIT                                
+MIT                                                                
