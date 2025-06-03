@@ -39,6 +39,8 @@ This will create a new command class in `app/Console/Commands/Hello.php`. The `-
 [cron.yml](./.github/workflows/cron.yml) is an example of how to run the command in GitHub Actions.
 This workflow file demonstrates how to set up a cron-like schedule to execute your Artisan commands automatically. You'll need to customize it with the specific commands you want to run and their desired frequency. Remember to configure repository secrets for any sensitive information your commands might need (e.g., API keys, database credentials).
 
+### Database
+
 ## Notifications
 
 Laravel's built-in notification system provides a convenient way to send notifications from your console commands. This is particularly useful for:
