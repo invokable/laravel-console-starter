@@ -6,7 +6,8 @@
 *.md diff=markdown
 *.php diff=php
 
-/.github export-ignore
+/.github/copilot-instructions.md export-ignore
+/.github/workflows/copilot-setup-steps.yml export-ignore
 LICENSE export-ignore
 composer.lock export-ignore
 /docs export-ignore
