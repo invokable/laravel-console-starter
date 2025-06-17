@@ -23,7 +23,7 @@ This starter kit accelerates the development of Laravel applications that primar
 ## Installation
 
 ```shell
-laravel new my-app --using=revolution/laravel-console-starter --no-interaction
+laravel new --using=revolution/laravel-console-starter --no-interaction my-app
 ```
 
 ## Usage
