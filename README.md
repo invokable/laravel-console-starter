@@ -153,4 +153,4 @@ For detailed usage instructions and examples, please refer to our comprehensive 
 - [チュートリアル (日本語)](./docs/tutorial_ja.md)
 
 ## LICENSE
-MIT                                                                
+MIT  
