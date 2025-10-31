@@ -40,23 +40,6 @@ This will create a new command class in `app/Console/Commands/Hello.php`. The `-
 [cron.yml](./.github/workflows/cron.yml) is an example of how to run the command in GitHub Actions.
 This workflow file demonstrates how to set up a cron-like schedule to execute your Artisan commands automatically. You'll need to customize it with the specific commands you want to run and their desired frequency. Remember to configure repository secrets for any sensitive information your commands might need (e.g., API keys, database credentials).
 
-### Database
-
-While console applications may not frequently use local databases, it's common to utilize remote databases like AWS RDS when running them in GitHub Actions. Database connection settings should be configured using secrets.
-
-Example of environment variable configuration in a workflow:
-
-```yaml
-      - name: Run Command
-        run: php artisan inspire
-        env:
-          APP_KEY: ${{ secrets.APP_KEY }}
-          DB_HOST: ${{ secrets.DB_HOST }}
-          DB_DATABASE: ${{ secrets.DB_DATABASE }}
-          DB_USERNAME: ${{ secrets.DB_USERNAME }}
-          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
-```
-
 ## Notifications
 
 Laravel's built-in notification system provides a convenient way to send notifications from your console commands. This is particularly useful for:
@@ -73,6 +56,25 @@ php artisan config:publish services
 ```
 
 The `config/mail.php` file allows you to configure your mailer settings, while `config/services.php` is used to store credentials and settings for various third-party services that Laravel can integrate with for notifications (e.g., Slack, Vonage). For detailed setup and usage, please refer to the official [Laravel Notification documentation](https://laravel.com/docs/notifications).
+
+### Database
+
+> **Note:** The database feature is disabled by default.
+
+While console applications may not frequently use local databases, it's common to utilize remote databases like AWS RDS when running them in GitHub Actions. Database connection settings should be configured using secrets.
+
+Example of environment variable configuration in a workflow:
+
+```yaml
+      - name: Run Command
+        run: php artisan inspire
+        env:
+          APP_KEY: ${{ secrets.APP_KEY }}
+          DB_HOST: ${{ secrets.DB_HOST }}
+          DB_DATABASE: ${{ secrets.DB_DATABASE }}
+          DB_USERNAME: ${{ secrets.DB_USERNAME }}
+          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+```
 
 ## Application Ideas
 
