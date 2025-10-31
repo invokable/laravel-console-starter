@@ -67,7 +67,6 @@ Here are some ideas for applications that can be built using this starter kit:
 - SSL certificate expiration checks and email notifications
 - Competitor price change tracking with Discord notifications
 - API response time monitoring and alerts
-- Database size growth reports
 - Website performance score (Lighthouse) periodic checks
 
 ### Finance and Business
@@ -80,11 +79,9 @@ Here are some ideas for applications that can be built using this starter kit:
 - Subscription renewal alerts
 
 ### Data Processing and Reports
-- Database backup and completion status notifications
 - Old log file cleanup and storage space reports
 - Data synchronization between different APIs with result reports
 - CSV data import and processing result notifications
-- Database integrity checks and issue reports
 - Cache cleanup and optimization reports
 - Periodic data exports and uploads to cloud storage
 
