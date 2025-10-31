@@ -57,25 +57,6 @@ php artisan config:publish services
 
 The `config/mail.php` file allows you to configure your mailer settings, while `config/services.php` is used to store credentials and settings for various third-party services that Laravel can integrate with for notifications (e.g., Slack, Vonage). For detailed setup and usage, please refer to the official [Laravel Notification documentation](https://laravel.com/docs/notifications).
 
-### Database
-
-> **Note:** The database feature is disabled by default.
-
-While console applications may not frequently use local databases, it's common to utilize remote databases like AWS RDS when running them in GitHub Actions. Database connection settings should be configured using secrets.
-
-Example of environment variable configuration in a workflow:
-
-```yaml
-      - name: Run Command
-        run: php artisan inspire
-        env:
-          APP_KEY: ${{ secrets.APP_KEY }}
-          DB_HOST: ${{ secrets.DB_HOST }}
-          DB_DATABASE: ${{ secrets.DB_DATABASE }}
-          DB_USERNAME: ${{ secrets.DB_USERNAME }}
-          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
-```
-
 ## Application Ideas
 
 Here are some ideas for applications that can be built using this starter kit:
@@ -153,6 +134,7 @@ For detailed usage instructions and examples, please refer to our comprehensive 
 
 - [Tutorial (English)](./docs/tutorial.md)
 - [チュートリアル (日本語)](./docs/tutorial_ja.md)
+- [Database](./docs/database.md)
 
 ## LICENSE
 MIT  
