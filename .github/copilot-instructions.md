@@ -12,7 +12,6 @@ The Laravel Console Starter is a specialized framework for building Laravel appl
 - Cryptocurrency portfolio trackers and price monitoring
 - Web scraping and content aggregation systems
 - Reporting and analytics automation
-- Database maintenance and cleanup tasks
 
 **Target Users**: Backend developers, DevOps engineers, and automation specialists who want to build reliable, testable console applications without the overhead of web application infrastructure.
 
@@ -295,7 +294,6 @@ jobs:
 ### Monitoring and Automation
 - **Website Uptime Monitoring**: Check site availability and send Slack alerts on downtime
 - **API Health Checks**: Monitor external API endpoints and response times
-- **Database Cleanup**: Remove old records, optimize tables, send summary reports
 - **Log Analysis**: Parse application logs, detect patterns, alert on anomalies
 
 ### Data Processing and Reporting
