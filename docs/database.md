@@ -105,8 +105,10 @@ For SQLite (simpler for local development):
 
 ```env
 DB_CONNECTION=sqlite
-DB_DATABASE=/absolute/path/to/database.sqlite
+# DB_DATABASE=/database/database.sqlite
 ```
+
+If `DB_DATABASE` is not set, `/database/database.sqlite` will be used.
 
 ### 3.2 GitHub Actions Configuration
 
