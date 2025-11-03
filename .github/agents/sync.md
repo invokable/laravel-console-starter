@@ -77,6 +77,10 @@ This starter kit is designed to work without a database, so keep these file-base
 ### bootstrap/app.php
 
 - Remove `withMiddleware` and leave it as is
+ 
+### tests/Feature/ExampleTest.php
+
+- Keep `artisan` tests only, remove any web-related tests
 
 ## Files to Ignore
 
