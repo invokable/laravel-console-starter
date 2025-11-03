@@ -69,6 +69,15 @@ This is a **minimalist console-focused starter kit** that intentionally removes 
 
 This starter kit is designed to work without a database, so keep these file-based drivers intact even if the Laravel skeleton uses database drivers by default.
 
+### .gitattributes
+**Preserve any custom attributes** that are specific to this starter kit, especially those related to console application development.
+
+- All items under `LICENSE export-ignore`
+
+### bootstrap/app.php
+
+- Remove `withMiddleware` and leave it as is
+
 ## Files to Ignore
 
 **DO NOT sync** or create these files/directories as they have been intentionally removed:
