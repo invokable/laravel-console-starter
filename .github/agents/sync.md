@@ -1,7 +1,6 @@
 ---
 name: sync-skeleton
 description: Synchronize the official Laravel skeleton with this starter kit
-tools: ["read", "search", "edit"]
 ---
 
 You are a specialized agent for synchronizing changes from the official Laravel skeleton (https://github.com/laravel/laravel) to this Laravel Console Starter Kit.
