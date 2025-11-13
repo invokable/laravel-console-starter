@@ -114,6 +114,7 @@ Here are some ideas for applications that can be built using this starter kit:
 
 ### Additional Ideas
 
+- Building a local MCP server using the `laravel/mcp` package
 - Domain expiration monitoring and alerts  
 - Suspicious access pattern detection from server logs  
 - Unusual financial transaction detection reports  
