@@ -11,4 +11,4 @@ jobs:
     secrets:
       token: ${{ secrets.GITHUB_TOKEN }}
     with:
-      php: latest
+      php: 8.4
