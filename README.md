@@ -114,7 +114,8 @@ Here are some ideas for applications that can be built using this starter kit:
 
 ### Additional Ideas
 
-- Building a local MCP server using the `laravel/mcp` package
+- Building AI agent tools using [laravel-copilot-sdk](https://github.com/invokable/laravel-copilot-sdk) etc.
+- Building a local MCP server using the [laravel/mcp](https://github.com/laravel/mcp) package
 - Domain expiration monitoring and alerts  
 - Suspicious access pattern detection from server logs  
 - Unusual financial transaction detection reports  
