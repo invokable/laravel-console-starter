@@ -49,7 +49,7 @@ Download `config/database.php` from the Laravel repository and place it in your 
 
 ```bash
 # Download to your project
-curl -o config/database.php https://raw.githubusercontent.com/laravel/laravel/12.x/config/database.php
+curl -o config/database.php https://raw.githubusercontent.com/laravel/laravel/13.x/config/database.php
 ```
 
 ### 1.3 Download User Model
@@ -61,7 +61,7 @@ Download `app/Models/User.php` from the Laravel repository:
 mkdir -p app/Models
 
 # Download User model
-curl -o app/Models/User.php https://raw.githubusercontent.com/laravel/laravel/12.x/app/Models/User.php
+curl -o app/Models/User.php https://raw.githubusercontent.com/laravel/laravel/13.x/app/Models/User.php
 ```
 
 ## Step 2: Update Composer Autoload Configuration
@@ -141,12 +141,12 @@ jobs:
   cron:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: 8.4
+          php-version: 8.5
           extensions: pdo, pdo_mysql
           
       - name: Install Dependencies

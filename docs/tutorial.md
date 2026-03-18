@@ -15,7 +15,7 @@ Benefits of using `revolution/laravel-console-starter`:
 
 Please ensure the following software is installed before proceeding with this tutorial.
 
-*   **PHP**: Version `^8.2` (or later)
+*   **PHP**: Version `^8.3` (or later)
 *   **Composer**: PHP dependency management tool ([https://getcomposer.org/](https://getcomposer.org/))
 *   **Laravel Installer**: Tool for easily creating Laravel projects (`composer global require laravel/installer`)
 
@@ -146,12 +146,12 @@ jobs:
 
     steps:
       - name: Checkout          # Step 1: Check out the repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Setup PHP         # Step 2: Set up PHP environment
         uses: shivammathur/setup-php@v2
         with:
-          php-version: 8.4
+          php-version: 8.5
           coverage: none
 
       - name: Install Dependencies  # Step 3: Install Composer dependencies

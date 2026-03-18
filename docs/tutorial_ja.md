@@ -15,7 +15,7 @@
 
 このチュートリアルを進めるにあたり、以下のソフトウェアがインストールされていることを確認してください。
 
-*   **PHP**: バージョン `^8.2` (またはそれ以降)
+*   **PHP**: バージョン `^8.3` (またはそれ以降)
 *   **Composer**: PHP の依存関係管理ツール ([https://getcomposer.org/](https://getcomposer.org/))
 *   **Laravel Installer**: Laravel プロジェクトを簡単に作成するためのツール (`composer global require laravel/installer`)
 
@@ -146,12 +146,12 @@ jobs:
 
     steps:
       - name: Checkout          # ステップ 1: リポジトリのチェックアウト
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Setup PHP         # ステップ 2: PHP 環境のセットアップ
         uses: shivammathur/setup-php@v2
         with:
-          php-version: 8.4
+          php-version: 8.5
           coverage: none
 
       - name: Install Dependencies  # ステップ 3: Composer 依存関係のインストール
