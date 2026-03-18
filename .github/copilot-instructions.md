@@ -151,11 +151,11 @@ jobs:
   cron:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: 8.4
+          php-version: 8.5
       - name: Install Dependencies
         run: composer install --no-dev -q
       - name: Copy Environment File
