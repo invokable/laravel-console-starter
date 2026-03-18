@@ -16,9 +16,9 @@ This starter kit accelerates the development of Laravel applications that primar
 - **Laravel Framework Power:** Leverage familiar Laravel features like its robust dependency injection container, event system, configuration management, and application testing tools for your console applications.
 
 ## Requirements
-- PHP ^8.2
-- Laravel Framework ^12.0
-- Laravel Installer ^5.14
+- PHP ^8.3
+- Laravel Framework ^13.0
+- Laravel Installer ^5.24
 
 ## Installation
 
