@@ -43,13 +43,12 @@ Download and place files:
 - `database/migrations/*` (all migration files)
 - `database/seeders/DatabaseSeeder.php`
 
-### 1.2 Download Database Configuration
+### 1.2 Publish Database Configuration
 
-Download `config/database.php` from the Laravel repository and place it in your `config/` directory:
+Publish `config/database.php`
 
 ```bash
-# Download to your project
-curl -o config/database.php https://raw.githubusercontent.com/laravel/laravel/13.x/config/database.php
+php artisan config:publish database 
 ```
 
 ### 1.3 Download User Model
