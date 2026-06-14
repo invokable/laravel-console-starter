@@ -37,6 +37,7 @@ This is a **minimalist console-focused starter kit** that intentionally removes 
 
 ### Test Files
 - `tests/TestCase.php`
+- `tests/Pest.php`
 - `tests/Feature/ExampleTest.php`
 - `tests/Unit/ExampleTest.php`
 
@@ -76,10 +77,18 @@ This starter kit is designed to work without a database, so keep these file-base
 ### bootstrap/app.php
 
 - Remove `withMiddleware` and leave it as is
- 
+
+### tests/Pest.php
+
+- Since we're using Pest to match the starter kit rather than the skeleton version, we'll keep Pest.php.
+
 ### tests/Feature/ExampleTest.php
 
 - Keep `artisan` tests only, remove any web-related tests
+
+### phpstan.neon
+
+- Keep `phpstan.neon` as is.
 
 ## Files to Ignore
 
