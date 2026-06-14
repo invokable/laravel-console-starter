@@ -15,6 +15,7 @@
     },
     "require-dev": {
         "fakerphp/faker": "^1.23",
+        "larastan/larastan": "^3.9",
         "laravel/pail": "^1.2.5",
         "laravel/pao": "^1.0.6",
         "laravel/pint": "^1.27",
@@ -45,8 +46,17 @@
         "lint:check": [
             "pint --parallel --test"
         ],
+        "ci:check": [
+            "Composer\\Config::disableProcessTimeout",
+            "@test"
+        ],
+        "types:check": [
+            "phpstan analyse"
+        ],
         "test": [
             "@php artisan config:clear --ansi @no_additional_args",
+            "@lint:check",
+            "@types:check",
             "@php artisan test --compact --parallel"
         ],
         "post-autoload-dump": [
