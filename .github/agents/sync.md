@@ -58,7 +58,6 @@ This is a **minimalist console-focused starter kit** that intentionally removes 
 
 ### composer.json
 **Preserve these custom additions**:
-- `"laravel/tinker"` in require-dev section
 - Any custom scripts or configurations specific to this console starter kit
 
 ### .env.example
