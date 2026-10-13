@@ -98,6 +98,9 @@ This starter kit is designed to work without a database, so keep these file-base
 - `database/` directory (migrations, factories, seeders)
 - `routes/web.php`, `routes/api.php`, `routes/channels.php`
 - `vite.config.js`, `package.json`, `tailwind.config.js`
+- `AGENTS.md`, `CLAUDE.md`
+- `.styleci.yml`
+- `.npmrc`
 - Any web middleware or HTTP-related files
 
 ## Workflow
